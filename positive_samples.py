@@ -15,3 +15,5 @@ if __name__ == '__main__':
     sentence = "The wide road shimmered in the hot sun"
     tokens = sentence.split()
     print(len(make_positive_samples(tokens, 2)))
+
+print("Hello World")
