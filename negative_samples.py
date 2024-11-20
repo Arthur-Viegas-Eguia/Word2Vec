@@ -1,12 +1,12 @@
 import numpy as np
 import random
 
-def make_negative_samples(corpus, window size, num_ns):
+def make_negative_samples(corpus, window_size, num_ns):
     skipgrams = []
     for i in range(len(corpus)):
         pos_words = []
         neg_words = []
-        for j in range(1, window size + 1):
+        for j in range(1, window_size + 1):
             if i - j > -1:
                 pos_words.append(corpus[i - j])
             if i < len(corpus) - j:
