@@ -8,7 +8,7 @@ class Word2Vec:
         self.embedding_dict = []
         for _ in range(len(vocab.vocab)):
             vec = np.random.normal(0, 1, size=dim_size)
-            self.append(vec / (np.sqrt(np.sum(vec ** 2))))
+            self.embedding_dict.append(vec / (np.sqrt(np.sum(vec ** 2))))
         self.embedding_dict = np.array(self.embedding_dict)
 
         # the word frequency table used for negative sampling
@@ -24,13 +24,26 @@ class Word2Vec:
         1/(1 + np.exp(-np.dot(self.embedding_dict[idx_1], self.embedding_dict[idx_2])))
 
     def make_negative_samples(self, target_idx):
-        temp = self.word_frequency[target_idx]
-        self.word_frequency[target_idx] = 0
-        np.random.choice(np.arange(len(self.vocab.vocab)), size=self.num_ns, p=self.word_frequency)
-        self.word_frequency[target_idx] = temp
+        frq = self.word_frequency.copy()
+        print(frq)
+        frq[target_idx] = 0
+        frq /= np.sum(frq)
+        print(frq)
+        return np.random.choice(np.arange(len(self.vocab.vocab)), size=self.num_ns, p=frq, replace=False)
 
+    def index_from_word(self, word):
+        return self.vocab.vocab[word]
+    
+    def word_from_index(self, idx):
+        return self.vocab.inv_vocab[idx]
 
 
 if __name__ == '__main__':
-    model = Word2Vec(5, ['hello'])
-    print(model.embedding_dict['hello'])
+    data = 'hello hello hello the quick brown fox jumped over the lazy dog'.split()
+    vocab = Vocab(data)
+    print(vocab.vocab)
+    print(vocab.inv_vocab)
+    print(vocab.word_counts)
+    model = Word2Vec(5, vocab, num_ns=2)
+    idx = model.index_from_word('hello')
+    print(idx, model.make_negative_samples(idx))
