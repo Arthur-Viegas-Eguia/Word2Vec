@@ -37,6 +37,7 @@ class Word2Vec:
 
     def make_negative_samples(self, skipgrams):
         for i in range(len(skipgrams)):
+            print(f'Generating Sample {i} / {len(skipgrams)}')
             frq = self.word_frequency.copy()
             frq[skipgrams[i][0]] = 0
             frq /= np.sum(frq)
@@ -86,21 +87,21 @@ class Word2Vec:
 
 if __name__ == '__main__':
     data = None
-    with open('modified_output.txt') as f:
+    with open('answer.txt') as f:
         data = f.readline().lower()
-    data = data.split()
+    data = data.split()[:10000]
     vocab = Vocab(data)
     sentence = [vocab.vocab[word] for word in data]
     print('Initializing Model...')
-    model = Word2Vec(128, vocab, num_ns=2)
+    model = Word2Vec(128, vocab, num_ns=5)
     print('Making Samples...')
-    samples = model.make_training_data(sentence, 2)
+    samples = model.make_training_data(sentence, 4)
     print('Computing Starting Loss...')
     total_loss = 0
     for sample in samples:
         total_loss += model.compute_loss(sample)
     print(total_loss / len(samples))
-    for i in range(5):
+    for i in range(11):
         print(f'Starting Epoch {i}...')
         model.gradient_descent(samples, .1)
     print('Computing Loss...')
@@ -109,4 +110,4 @@ if __name__ == '__main__':
         total_loss += model.compute_loss(sample)
     print(total_loss / len(samples))
     embeddings = model.get_embeddings()
-    print(most_similar.most_similar('bad', embeddings, 2))
+    print(most_similar.most_similar('fuck', embeddings, 5))
