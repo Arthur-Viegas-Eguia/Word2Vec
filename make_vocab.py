@@ -3,7 +3,7 @@ def index_words(words):
     index = 2
     for word in words:
         if word not in vocab:
-            vocab[word] = index
+            vocab[word.lower()] = index
             index += 1
     return vocab
 
