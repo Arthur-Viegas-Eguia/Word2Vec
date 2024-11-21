@@ -1,3 +1,4 @@
+from cosine_similarity import cos_sim
 # The goal here is to take an input word and create a list of the n most similar words (cos sim)
 
 def most_similar(target, vocab, topn):
@@ -13,6 +14,6 @@ def most_similar(target, vocab, topn):
         all_sims[word] = cos_sim(target_embed, vocab[word])
     for x in range(topn):
         most_similar = max(all_sims, key=lambda key: all_sims[key])
-        topn_similar.append(all_sims[most_similar])
+        topn_similar.append(most_similar)
         del all_sims[most_similar]
     return topn_similar

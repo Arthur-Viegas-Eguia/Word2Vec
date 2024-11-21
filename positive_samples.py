@@ -8,7 +8,7 @@ def make_positive_samples(corpus, window_size):
                 skipgrams.append((corpus[i], corpus[i - j]))
             if i < len(corpus) - j:
                 skipgrams.append((corpus[i], corpus[i + j]))
-    return np.array(skipgrams)
+    return skipgrams
 
 
 if __name__ == '__main__':
