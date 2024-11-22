@@ -22,6 +22,7 @@ class Word2Vec:
         self.norm_update_frq = norm_update_frq
 
     def normalize_embeds(self):
+        '''This sets the magnitude of all vectors to 1'''
         norms = np.linalg.norm(self.target_embeddings, axis=1, keepdims=True)
         self.target_embeddings /= norms
         norms = np.linalg.norm(self.context_embeddings, axis=1, keepdims=True)
@@ -32,6 +33,7 @@ class Word2Vec:
         return 1 / (1 + np.exp(-np.dot(target_emb, context_emb)))
 
     def make_training_data(self, words):
+        '''Generates training data for an input corpus represented by an array of word indices'''
         samples = []
         for i in range(len(words)):
             for j in range(max(0, i - self.window_size), min(len(words), i + self.window_size + 1)):
@@ -44,6 +46,7 @@ class Word2Vec:
         return np.array(samples)
 
     def make_negative_sample(self, sample):
+        '''Creates negative samples for an input sample. This samples from word_frequency. We allow all negative samples except the target word.'''
         indices = np.arange(len(self.vocab.vocab))
         sample[2:] = np.random.choice(indices, size=self.num_ns, p=self.word_frequency, replace=False)
         for i in range(2, len(sample)):
@@ -53,6 +56,7 @@ class Word2Vec:
         return sample
     
     def compute_loss(self, sample):
+        '''Compute loss: the negative log probability of positive samples being positive and negative samples being negative.'''
         loss = math.log(self.probability(self.target_embeddings[sample[0]], self.context_embeddings[sample[1]]))
         for i in range(2, len(sample)):
             loss += math.log(1 - self.probability(self.target_embeddings[sample[0]], self.context_embeddings[sample[i]]))
@@ -68,6 +72,8 @@ class Word2Vec:
             for sample in samples:
                 total_loss += self.compute_loss(sample)
             print(f'Epoch {i} Complete. Average Loss: {total_loss / len(samples)}.')
+            self.learning_rate *= 0.9 # decreasing the learning rate helps the model zone in as it gets closer to a local minimum.
+        self.learning_rate /= (0.9 ** epochs) # reset learning rate if we want to train again
     
     def gradient_descent(self, samples, learning_rate):
         for sample in samples:

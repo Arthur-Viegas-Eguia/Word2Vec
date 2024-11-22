@@ -4,9 +4,16 @@ from vocabulary import Vocab
 import numpy as np
 from word2vec import Word2Vec
 import most_similar
+from multiprocessing import Pool
+from functools import partial
+
+def load_sample(idx, reviews, model):
+    print(f"Sampling review {idx + 1}/{len(reviews)}...")
+    samples = model.make_training_data(reviews[idx])
+    return samples
 
 def main():
-    num_samples = 2000
+    num_samples = 25000
 
     stopwords = set()
     with open('stopwords.txt') as f:
@@ -16,7 +23,7 @@ def main():
     reviews = []
     for file in os.listdir('training_data'):
         with open(f'training_data/{file}') as f:
-            review = re.sub('[^(a-z| )]', '', ' '.join(f.readlines()).lower())
+            review = re.sub('[^a-z| ]', '', ' '.join(f.readlines()).lower())
             while '  ' in review:
                 review = review.replace('  ', ' ')
             reviews.append(review.split())
@@ -31,12 +38,10 @@ def main():
     model = Word2Vec(128, v, num_ns=7, window_size=5, learning_rate=.001)
 
     samples = None
-    for i in range(num_samples):
-        print(f"Sampling review {i + 1}/{num_samples}...")
-        if samples is None:
-            samples = model.make_training_data(reviews[i])
-        else:
-            samples = np.append(samples, model.make_training_data(reviews[i]), axis=0)
+    with Pool(8) as p:
+        samples = p.map(partial(load_sample, reviews=reviews, model=model), range(num_samples))
+    samples = np.concatenate(samples, axis=0)
+        
     model.train(samples, 10)
 
     with open('embeds.txt', 'w') as f:

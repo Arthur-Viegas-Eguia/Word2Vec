@@ -10,6 +10,7 @@ class Vocab:
         index = 0
         for words in docs:
             for word in words:
+                # count words and add to vocabulary if necessary
                 if word in stopwords:
                     continue
                 if word not in self.vocab:
@@ -18,11 +19,13 @@ class Vocab:
                     self.word_counts.append(0)
                 self.word_counts[self.vocab[word]] += 1
         
+        # collect words that are under min_count to delete them.
         words_to_delete = []
         for key, val in self.vocab.items():
             if self.word_counts[val] < min_count:
                 words_to_delete.append(key)
 
+        # delete collected words. Does this by putting the word with the last index in its spot for all relevant arrays then deleting the index the last word was in.
         self.inv_vocab = self.inverse_vocab()
         for i in range(len(words_to_delete)):
             idx = self.vocab[words_to_delete[i]]

@@ -1,4 +1,5 @@
 from cosine_similarity import cos_sim
+import numpy as np
 # The goal here is to take an input word and create a list of the n most similar words (cos sim)
 
 def most_similar_by_word(target, vocab, topn):
@@ -9,6 +10,7 @@ def most_similar_by_word(target, vocab, topn):
     target_embed = vocab[target]
     all_sims = {}
     topn_similar = []
+    store = vocab[target]
     del vocab[target]
     for word in vocab:
         all_sims[word] = cos_sim(target_embed, vocab[word])
@@ -16,21 +18,23 @@ def most_similar_by_word(target, vocab, topn):
         most_similar = max(all_sims, key=lambda key: all_sims[key])
         topn_similar.append(most_similar)
         del all_sims[most_similar]
+    vocab[target] = store
     return topn_similar
 
 def most_similar(positive, negative, vocab, topn):
     # expected that positive will be a list of words (strings), same with negatives. Vocab will be a dictionary with all words as keys
     # and their embeddings as values. topn is the size of the list of similar words.
-    pos_sum = 0
-    neg_sum = 0
+    sample_vec = vocab['bad']
+    pos_sum = np.zeros(sample_vec.size)
+    neg_sum = np.zeros(sample_vec.size)
     key_vectors = 0
     for vector in positive:
-        pos_sum += vector
+        pos_sum += vocab[vector]
         key_vectors += 1
     for vector in negative:
-        neg_sum += vector
+        neg_sum += vocab[vector]
         key_vectors += 1
-    avg_vec = pos_sum - neg_sum / key_vectors
+    avg_vec = (pos_sum - neg_sum) / key_vectors
     all_sims = {}
     topn_similar = []
     for word in vocab:
