@@ -19,3 +19,9 @@ class Vocab:
 
     def inverse_vocab(self):
         return {index: word for word, index in self.vocab.items()}
+    
+    def index_from_word(self, word):
+        return self.vocab[word]
+    
+    def word_from_index(self, idx):
+        return self.inv_vocab[idx]
