@@ -8,4 +8,4 @@ with open('joint_embeds.txt') as f:
 for key, val in model.items():
     model[key] = np.array(model[key])
 
-print(most_similar.most_similar_by_word('good', model, 5))
+print(most_similar.most_similar_by_word('fantastic', model, 5))
