@@ -78,7 +78,7 @@ class Word2Vec:
         '''
         suffix = '' if not self.compute_loss else f' Average Loss: {self.compute_average_loss(samples)}'
         print(f'Starting Training.{suffix}')
-        for i in range(epochs):
+        for i in range(1, epochs + 1):
             print(f'Starting Epoch {i}...')
             np.random.shuffle(samples) # shuffling is important so that we aren't always computing the same gradients in the same order
             # self.normalize_embeds()

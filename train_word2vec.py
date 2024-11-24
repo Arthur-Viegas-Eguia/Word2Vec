@@ -32,6 +32,7 @@ if __name__ == '__main__':
         epilog='With this, training word2vec has never been easier! (this is definitely not true, but we\'re going to roll with it.)'
     )
     # get program parameters
+    parser.add_argument('model_name', help='The name the model will be given in storage.')
     parser.add_argument('file_or_directory', help='The directory of txt files or the txt file itself that should be used for training.')
     parser.add_argument('-d', '--dimensions', default=128, help='The number of dimensions for each vector.', type=int)
     parser.add_argument('-e', '--epochs', default=10, help='Number of iterations over the dataset while training.', type=int)
@@ -44,13 +45,27 @@ if __name__ == '__main__':
 
     args = parser.parse_args()
     
+    # check that training data exists
     if not os.path.exists(args.file_or_directory):
         print('Could not find file/directory.')
 
-    if os.path.exists('embeds.txt') or os.path.exists('joint_embeds.txt'): # prevent people from accidentally deleting old models
-        response = input('You already have files embeds.txt or joint_embeds.txt. Running this program will overwrite them. Do you want to proceed? (y/n)\n')
+    # make the folder models if it doesn't exist already
+    try:
+        os.mkdir('models')
+    except FileExistsError:
+        pass
+
+    # prevent people from accidentally deleting old models
+    if os.path.exists(f'models/{args.model_name}_embeds.txt') or os.path.exists(f'models/{args.model_name}_joint_embeds.txt'): 
+        response = input(f'You already have a model named {args.model_name}. Running this program will delete it. Do you want to proceed? (y/n)\n')
         if response.lower() != 'y':
             sys.exit()
+    
+    # if the name is somehow illegal in the operating system or something, I want to tell users before they wait for it to train
+    with open(f'models/{args.model_name}_embeds.txt', 'w'):
+        pass
+    with open(f'models/{args.model_name}_joint_embeds.txt', 'w'):
+        pass
 
     # read in all data
     docs = [] 
@@ -85,12 +100,12 @@ if __name__ == '__main__':
     model.train(samples, args.epochs)
 
     # save results so we can use them.
-    with open('embeds.txt', 'w') as f:
+    with open(f'models/{args.model_name}_embeds.txt', 'w') as f:
         embeds = model.get_target_embeddings()
         for key in embeds.keys():
             embeds[key] = embeds[key].tolist()
         f.write(str(embeds))
-    with open('joint_embeds.txt', 'w') as f:
+    with open(f'models/{args.model_name}_joint_embeds.txt', 'w') as f:
         embeds = model.get_joint_embeddings()
         for key in embeds.keys():
             embeds[key] = embeds[key].tolist()
