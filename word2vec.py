@@ -1,7 +1,6 @@
 import numpy as np
 from vocabulary import Vocab
 import math
-from multiprocessing import Pool
 
 class Word2Vec:
     def __init__(self, dim_size, vocab: Vocab, unigram_frequency_weight, num_ns, window_size, learning_rate, compute_loss):
