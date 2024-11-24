@@ -15,8 +15,9 @@ if __name__ == '__main__':
     while query != ',q':
         try:
             print(f'The most similar words to {query} are: {most_similar.most_similar_by_word(query, model, 10)}')
-            query = input("What word do you want to look up? (,1) to quit \n")
+            query = input("What word do you want to look up? (,q) to quit \n")
         except KeyError:
             print(f'Query {query} was not found in the model. Please try another query.')
-            query = input("What word do you want to look up? (,1) to quit \n")
-        
+            query = input("What word do you want to look up? (,q) to quit \n")
+    
+    print(most_similar.most_similar_by_embedding(model['woman'] + (model['actor'] - model['man']), model, 10))
