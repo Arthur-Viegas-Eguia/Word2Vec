@@ -1,6 +1,11 @@
-from cosine_similarity import cos_sim
 import heapq
 # The goal here is to take an input word and create a list of the n most similar words (cos sim)
+import numpy as np
+from numpy.linalg import norm
+
+def cos_sim(embedding1, embedding2):
+    cosine = np.dot(embedding1,embedding2)/(norm(embedding1)*norm(embedding2))
+    return cosine
 
 def most_similar_by_word(target, vocab, topn):
     #1.Find the embedding of word, then calculate the cosine similarity between it and every word in the vocab.
