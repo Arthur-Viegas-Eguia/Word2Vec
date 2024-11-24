@@ -4,7 +4,7 @@ import math
 from multiprocessing import Pool
 
 class Word2Vec:
-    def __init__(self, dim_size, vocab: Vocab, unigram_frequency_weight = .75, num_ns = 2, window_size = 2, learning_rate = .025, norm_update_frq = 100):
+    def __init__(self, dim_size, vocab: Vocab, unigram_frequency_weight, num_ns, window_size, learning_rate, compute_loss):
         '''Initializes word2vec model with dim_size dimensions where each word has a normally distributed standard vector'''
         #Initialize word embeddings
         self.target_embeddings = np.random.uniform(-.01, .01, size=(len(vocab.vocab), dim_size))
@@ -19,9 +19,10 @@ class Word2Vec:
         self.num_ns = num_ns
         self.window_size = window_size
         self.learning_rate = learning_rate
-        self.norm_update_frq = norm_update_frq
+        self.compute_loss = compute_loss
 
     def normalize_embeds(self):
+        '''Scales all vectors down so that the largest vector is magnitude 1. This is useful for a stable loss function while also having relative position saved.'''
         '''This sets the magnitude of all vectors to 1'''
         norms = np.linalg.norm(self.target_embeddings, axis=1, keepdims=True)
         self.target_embeddings /= norms
@@ -55,27 +56,38 @@ class Word2Vec:
                 break
         return sample
     
-    def compute_loss(self, sample):
-        '''Compute loss: the negative log probability of positive samples being positive and negative samples being negative.'''
-        loss = math.log(self.probability(self.target_embeddings[sample[0]], self.context_embeddings[sample[1]]))
-        for i in range(2, len(sample)):
-            loss += math.log(1 - self.probability(self.target_embeddings[sample[0]], self.context_embeddings[sample[i]]))
-        return -loss
+    def compute_average_loss(self, samples):
+        tar_norms = np.linalg.norm(self.target_embeddings, axis=1)
+        con_norms = np.linalg.norm(self.context_embeddings, axis=1)
+        max_norm = max(np.max(tar_norms), np.max(con_norms))
+        tar_embeddings = self.target_embeddings / max_norm
+        con_embeddings = self.context_embeddings / max_norm
+        targets = tar_embeddings[samples[:,0]]
+        contexts = con_embeddings[samples[:,1:]]
+        total_loss = 0
+        for i in range(len(targets)):
+            loss = math.log(self.probability(targets[i], contexts[i][0]))
+            for j in range(1, len(contexts[i])):
+                loss += math.log(1 - self.probability(targets[i], contexts[i][j]))
+            total_loss -= loss
+        return total_loss / len(samples)
     
     def train(self, samples, epochs):
+        '''
+        Passes over all samples epochs times, computing gradients along the way. Will print average losses if self.compute_loss is true.
+        '''
+        suffix = '' if not self.compute_loss else f' Average Loss: {self.compute_average_loss(samples)}'
+        print(f'Starting Training.{suffix}')
         for i in range(epochs):
             print(f'Starting Epoch {i}...')
-            # normalizing embeddings helps ensure that vectors don't get too big. This doesn't happen after the last epoch so some magnitude can be accounted for
-            self.normalize_embeds()
+            np.random.shuffle(samples) # shuffling is important so that we aren't always computing the same gradients in the same order
+            # self.normalize_embeds()
             self.gradient_descent(samples, self.learning_rate)
-            total_loss = 0
-            for sample in samples:
-                total_loss += self.compute_loss(sample)
-            print(f'Epoch {i} Complete. Average Loss: {total_loss / len(samples)}.')
-            self.learning_rate *= 0.9 # decreasing the learning rate helps the model zone in as it gets closer to a local minimum.
-        self.learning_rate /= (0.9 ** epochs) # reset learning rate if we want to train again
+            suffix = '' if not self.compute_loss else f' Average Loss: {self.compute_average_loss(samples)}'
+            print(f'Epoch {i} Complete.{suffix}')
     
     def gradient_descent(self, samples, learning_rate):
+        '''Computes gradients for each word with respect for each sample'''
         for sample in samples:
             target_emb = self.target_embeddings[sample[0]]
             context_embs = self.context_embeddings[sample[1:]]

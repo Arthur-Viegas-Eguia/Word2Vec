@@ -24,4 +24,4 @@ A: No, you generally should **not normalize the embeddings** during or after eac
 Let me know if you'd like further clarification or a deeper dive into any of the training processes!
 
 AI conversations:
-Discussion regarding appropriate learning rates: https://chatgpt.com/share/6740bee0-80ec-8008-8eb8-30b69c5ae1f6
+Discussion regarding appropriate hyperparameters and training corpus: https://chatgpt.com/share/6740bee0-80ec-8008-8eb8-30b69c5ae1f6
