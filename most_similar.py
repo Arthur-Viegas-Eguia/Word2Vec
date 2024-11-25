@@ -71,13 +71,3 @@ def closer_than(key1, key2, vocab):
         if cos_sim(key1, word) > baseline:
             closer_list.append(word, ": ", cos_sim(key1, word))
 
-if __name__ == '__main__':
-    test_dict = {"blarg" : 10, "scrungle": 18, "gungk" : 4, "fzzzbzzz" : 16, "bababooey" : 5}
-    list = []
-    topn_similar_vals = heapq.nlargest(2, test_dict.values(), key=test_dict.get)
-    for n in topn_similar_vals:
-        list.append(n + ": " + test_dict[n])
-    string = str("The most similar words to " + "squaw" + 'are: ' + list)
-    print(string)
-
-
