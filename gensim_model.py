@@ -12,8 +12,8 @@ import pandas as pd
 import numpy as np
 
 file =[]
-for file_path in os.listdir("data/"):
-    file = open("data/" + file_path, "r")
+for file_path in os.listdir("training_data/"):
+    file = open("training_data/" + file_path, "r")
     for line in file:
         file.append(line+"\n")
 
