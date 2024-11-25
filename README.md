@@ -1,7 +1,7 @@
 # Word2Vec
 For our final project, we were curious about how word embeddings are learned and trained, so we set out to implement the word2vec algorithm called skip-gram with negative sampling that is discussed in chapter 6 of Speech and Language Processing (3rd ed. draft) by Dan Jurafsky and James H. Martin for our naive implementation. Specifically this implementation requires only the numpy library.
 ## The Dataset
-For training, we used two datasets. One was based on discord messages that we have decided to not make public for privacy reasons. The other is 25,000 reviews from [Stanford's Large Movie Review Dataset](http://www.aclweb.org/anthology/P11-1015).
+For training, we used two datasets. One was based on discord messages from three servers of which we were members that we have decided to not make public for privacy reasons. The other is 25,000 reviews from [Stanford's Large Movie Review Dataset](http://www.aclweb.org/anthology/P11-1015).
 
 We decided to use two datasets for a couple reasons. First, the dataset we gathered from Discord is noisy, so there is not necessarily continuity between messages, possibly leading to worse embeddings. Second, the movie review dataset is filled with polarizing reviews, giving our word vectors a good avenue to learn sentiment based embeddings, indicating whether our results were successful.
 ## Usage
@@ -12,6 +12,9 @@ To train word embeddings on our naive model, a user should run `python3 train_wo
 To train our model on a database like that of the movie reviews, all reviews in question should be placed in a single directory stored as simple text documents, all other file structure should be eliminated.
 
 After the model is run, users should run the command `python3 load_model.py` and enter the name of their model when prompted. Users can then query the most similar words within a model.
+
+## Inspiration from KeyedVectors
+The functions implemented in most_similar.py are based on functions from the KeyedVectors class in Gensim, because these functions were very useful for the Connections assignment and we wanted to have access to similar functions for our project
 
 ## AI Acknoledgement
 No code was written by any AI like ChatGPT, but clarifying questions were asked like:
