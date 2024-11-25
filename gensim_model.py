@@ -10,12 +10,14 @@ Original file is located at
 import gensim
 import pandas as pd
 import numpy as np
+import os
 
 file =[]
 for file_path in os.listdir("training_data/"):
     file = open("training_data/" + file_path, "r")
     for line in file:
         file.append(line+"\n")
+    file.close()
 
 df = pd.Series(file)
 print(df.shape)
