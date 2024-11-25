@@ -9,7 +9,7 @@ from vocabulary import Vocab
 
 def main():
     if len(sys.argv) != 4:
-        print('Usage: python3 compare_models.py <dataset_1:naive txt> <dataset_2:gensim txt> <input_data:txt or directory of txts>')
+        print('Usage: python3 compare_models.py <dataset_1:naive txt> <dataset_2:gensim model> <input_data:txt or directory of txts>')
         sys.exit()
     model = None
     with open(sys.argv[1]) as f:
@@ -40,7 +40,6 @@ def main():
 
     model_1_score = 0
     model_2_score = 0
-    words_checked = 0
     for word, idx in v.vocab.items():
         if word not in model_1 or word not in model_2.wv or word not in comp_model:
             continue
