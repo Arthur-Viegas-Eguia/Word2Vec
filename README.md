@@ -13,7 +13,11 @@ To train our model on a database like that of the movie reviews, all reviews in 
 
 After the model is trained, users should run the command `python3 load_model.py` and enter the name of their model when prompted. Users can then query the most similar words within a model.
 
-To see the results of automatic evaluation, users should run `python3 compare_models.py <naive_model_directory> <gensim_model_directory> <training_dataset>` and the program will output the comparison. This file takes in hyperparameters through the same method as train_word2vec.py.
+To see the results of automatic evaluation, users should run `python3 compare_models.py <model_1> <model_2> <training_dataset>` and the program will output the comparison. This file takes in hyperparameters through the same method as train_word2vec.py.
+## Third-Party Model
+To train a third-party Gensim model, users should run gensim_model.py and follow the prompts to give datasest names and training data location.
+
+Once trained, Gensim models can be loaded using load_gensim_model.py and following the prompt.
 
 ## AI Acknoledgement
 No code was written by any AI like ChatGPT, but clarifying questions were asked like:

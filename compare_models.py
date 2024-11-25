@@ -72,8 +72,8 @@ def main():
         multiplier = frequencies[idx]
         model_1_score += len(comp_words.intersection(words_1)) * multiplier
         model_2_score += len(comp_words.intersection(words_2)) * multiplier
-    print(f'Naive\'s score was: {model_1_score}')
-    print(f'Gensim\'s score was: {model_2_score}')
+    print(f'Model 1\'s score was: {model_1_score}')
+    print(f'Model 2\'s score was: {model_2_score}')
 
 
 if __name__ == '__main__':
