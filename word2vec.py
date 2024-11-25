@@ -49,12 +49,14 @@ class Word2Vec:
         indices = np.arange(len(self.vocab.vocab))
         sample[2:] = np.random.choice(indices, size=self.num_ns, p=self.word_frequency, replace=False)
         for i in range(2, len(sample)):
+            # get rid of target word in samples if it is there
             while sample[i] == sample[0]:
                 sample[i] = np.random.choice(indices, p=self.word_frequency)
                 break
         return sample
     
     def compute_average_loss(self, samples):
+        '''Find average loss across all samples'''
         targets = self.context_embeddings[samples[:,0]]
         contexts = self.target_embeddings[samples[:,1:]]
         total_loss = 0

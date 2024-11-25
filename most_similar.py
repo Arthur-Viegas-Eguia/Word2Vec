@@ -28,6 +28,7 @@ def most_similar_by_word(target, vocab, topn):
     return topn_similar
 
 def most_similar_by_embedding(target, vocab, topn):
+    '''Returns most similar words by the target embedding given'''
     all_sims = {}
     topn_similar = []
     for word in vocab:
