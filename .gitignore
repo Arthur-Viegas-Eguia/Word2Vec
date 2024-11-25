@@ -2,5 +2,5 @@
 answer.txt
 /__pycache__
 /training_data
-*embeds.txt
+/models
 *.DS_Store

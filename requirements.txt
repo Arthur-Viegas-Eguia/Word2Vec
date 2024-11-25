@@ -1,3 +1,5 @@
 numpy
-tensorflow
 gensim
+pandas
+tqdm
+keras
