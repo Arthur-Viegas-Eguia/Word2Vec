@@ -19,6 +19,8 @@ To train a third-party Gensim model, users should run gensim_model.py and follow
 
 Once trained, Gensim models can be loaded using load_gensim_model.py and following the prompt.
 
+We also trained a TensorFlow model. However, as it did not yield good results we did not use it in our model evaluation and comparisons. The code is still in git, and was mostly inpired on a tensor flow tutorial
+
 ## Inspiration from KeyedVectors
 The functions implemented in most_similar.py are based on functions from the KeyedVectors class in Gensim, because these functions were very useful for the Connections assignment and we wanted to have access to similar functions for our project
 
