@@ -37,4 +37,4 @@ if __name__ == '__main__':
                     # word not in corpus
                     print(f'Query {query} was not found in the model. Please try another query.')
                 query = input("What word do you want to look up? (,q to quit) \n")
-        mode = input("Do you want to enter analogy or query mode? (a/q or ,q to quit)\n ")
+        mode = input("Do you want to enter analogy or query mode? (a/q or ,q to quit)\n")

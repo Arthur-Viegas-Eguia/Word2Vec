@@ -12,20 +12,24 @@ import pandas as pd
 import numpy as np
 import os
 
-file =[]
-for file_path in os.listdir("training_data/"):
-    file = open("training_data/" + file_path, "r")
-    for line in file:
-        file.append(line+"\n")
-    file.close()
+model_name = input("What do you want to name your model?\n")
+data_directory = input("What is the path to your training data?\n")
+files =[]
+if os.path.isfile(data_directory):
+    with open(data_directory, "r") as f:
+        for line in f:
+            files.append(line+"\n")
+else:
+    for file_path in os.listdir(f"{data_directory}/"):
+        file = open(f"{data_directory}/" + file_path, "r")
+        for line in file:
+            files.append(line+"\n")
 
-df = pd.Series(file)
-print(df.shape)
+df = pd.Series(files)
+print('Training Model.')
 vocab_tokens = df.apply(gensim.utils.simple_preprocess)
 model = gensim.models.Word2Vec(window = 5, min_count = 1, workers = 2)
 model.build_vocab(vocab_tokens, progress_per = 1000)
 model.train(vocab_tokens, total_examples=model.corpus_count, epochs = 10)
 
-model.save("model_gensim_movies.model")
-
-model.wv.most_similar("upset")
+model.save(f'models/model_gensim_{model_name}.model')
