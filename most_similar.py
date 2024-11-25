@@ -16,30 +16,19 @@ def most_similar_by_word(target, vocab, topn):
     already_used.append(target)
     all_sims = {}
     topn_similar = []
-    del vocab[target]
     for word in vocab:
         if word != target:
             all_sims[word] = cos_sim(target_embed, vocab[word])
-    for x in range(topn):
-        most_similar = max(all_sims, key=lambda key: all_sims[key])
-        topn_similar.append(most_similar)
-        del all_sims[most_similar]
-    vocab[target] = target_embed
-    return topn_similar
-
-def most_similar_by_embedding(target, vocab, topn):
-    '''Returns most similar words by the target embedding given'''
-    all_sims = {}
-    topn_similar = []
-    for word in vocab:
-        all_sims[word] = cos_sim(target, vocab[word])
-    for x in range(topn):
-        most_similar = max(all_sims, key=lambda key: all_sims[key])
-        topn_similar.append(most_similar)
-        del all_sims[most_similar]
-    return topn_similar
+    topn_similar_vals = heapq.nlargest(topn, all_sims.values(), key=all_sims.get)
+    for n in topn_similar_vals:
+        topn_similar.append(n + ": " + all_sims[n])
+    string = str("The most similar words to " + target + 'are: ' + topn_similar)
+    
+    return string
 
 def most_similar(positive, negative, vocab, topn):
+    #Find the average vector between the positive embeddings, and between the opposite of the negative embeddings. This function is not
+    # able to produce analogies, so it will not find the vector 
     # expected that positive will be a list of words (strings), same with negatives. Vocab will be a dictionary with all words as keys
     # and their embeddings as values. topn is the size of the list of similar words.
     pos_sum = 0
