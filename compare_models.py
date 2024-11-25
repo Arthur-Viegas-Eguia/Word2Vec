@@ -44,8 +44,8 @@ def main():
         if word not in model_1 or word not in model_2.wv or word not in comp_model:
             continue
         comp_words = set(map(lambda pair: pair[0], comp_model.most_similar(word, topn=20)))
-        words_1 = set(map(lambda pair: pair[0], model_1.most_similar(word, topn=20)))
-        words_2 = set(map(lambda pair: pair[0], model_2.wv.most_similar(word, topn=20)))
+        words_1 = set(map(lambda pair: pair[0], model_1.most_similar(word, topn=10)))
+        words_2 = set(map(lambda pair: pair[0], model_2.wv.most_similar(word, topn=10)))
         multiplier = frequencies[idx]
         model_1_score += len(comp_words.union(words_1)) * multiplier
         model_2_score += len(comp_words.union(words_2)) * multiplier
